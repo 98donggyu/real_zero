@@ -7,6 +7,7 @@ class realzero(models.Model):
     product_name = models.CharField(max_length=50, verbose_name="제품명")
     Capacity =  models.CharField(max_length=50, default=0, verbose_name="용량 (g)")
     Product_calorific_value = models.CharField(max_length=50, default=0, verbose_name="열량 (g)")
+    Product_calorific_onetime = models.CharField(max_length=50, default=0, verbose_name="1회 제공량 (g)")
     carbohydrates = models.CharField(max_length=50, verbose_name="탄수화물 (g)")
     protein =models.CharField(max_length=50, verbose_name="단백질 (g)")
     fat = models.CharField(max_length=50, verbose_name="지방 (g)")

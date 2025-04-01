@@ -75,8 +75,28 @@ def product_detail(request, id):
     raw_materials = product.Raw_materials.lower() if product.Raw_materials else ""
     has_maltitol = "말티톨" in raw_materials or "maltitol" in raw_materials
     
-    cal_value = (product.Product_calorific_value or "").strip().lower()
-    is_zero_calorie = cal_value in ["0", "0kcal", "0 kcal"]
+    cal_value_raw = (product.Product_calorific_value or "").strip().lower()
+    try:
+        cal_value = float(re.search(r'[\d.]+', cal_value_raw).group())
+    except (AttributeError, ValueError):
+        cal_value = 0
+
+    # 용량 값 가져오기 및 숫자 추출
+    capacity_raw = (product.Product_calorific_onetime or "").strip().lower()
+    try:
+        capacity = float(re.search(r'[\d.]+', capacity_raw).group())
+    except (AttributeError, ValueError):
+        capacity = 1
+
+    # 기본 0칼로리 여부 확인
+    is_zero_calorie = cal_value_raw in ["0", "0kcal", "0 kcal"]
+
+    # 단위당 칼로리 계산 및 0칼로리 여부 확인
+    calories_per_unit = 0
+    if not is_zero_calorie and capacity > 0:
+        calories_per_unit = cal_value / capacity
+        is_zero_calorie = calories_per_unit <= 0.05
+
     materials_list = [item.strip() for item in product.Raw_materials.split(',') if item.strip()]
 
     # 혈당 주의 성분 관련 메시지
@@ -93,7 +113,7 @@ def product_detail(request, id):
         highlighted_materials.append(highlighted)
 
     blood_sugar_warning = any(keyword in raw_materials for keyword in blacklist)
-    missing_gi = not product.GI or str(product.GI).strip().lower() in ['0', 'null', '', '측정불가']
+    missing_gi = not product.GI or str(product.GI).strip().lower() in ['null', '측정불가']
 
     warning_messages = []
     if blood_sugar_warning:
@@ -108,7 +128,10 @@ def product_detail(request, id):
         'warnings_count': sum(1 for k in blacklist if k in raw_materials),
         'has_maltitol': has_maltitol,
         'is_zero_calorie': is_zero_calorie,
-        'warning_messages': warning_messages  # 👈 템플릿에서 사용할 리스트
+        'warning_messages': warning_messages, # 👈 템플릿에서 사용할 리스트
+        'total_calories': cal_value,
+        'capacity': capacity,
+
     })
 
 def ranking_view(request):
