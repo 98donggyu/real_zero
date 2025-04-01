@@ -100,17 +100,33 @@ def product_detail(request, id):
     materials_list = [item.strip() for item in product.Raw_materials.split(',') if item.strip()]
 
     # 혈당 주의 성분 관련 메시지
-    blacklist = ["말티톨", "폴리글리시톨시럽", "물엿", "자일리톨"]
-    
+    blacklist = ["말티톨시럽", "말티톨", "폴리글리시톨시럽", "물엿", "자일리톨"]
+    blacklist = sorted(blacklist, key=len, reverse=True)
+
     highlighted_materials = []
+    matched_keywords = set()  # 중복 방지용
+
     for material in materials_list:
         highlighted = material
         for keyword in blacklist:
-            if keyword in material:
+            if keyword in highlighted:
                 highlighted = highlighted.replace(
                     keyword, f"<span class='text-danger'>{keyword}</span>"
                 )
+                matched_keywords.add(keyword)
         highlighted_materials.append(highlighted)
+
+    warning_groups = {
+    "말티톨": ["말티톨", "말티톨시럽"],
+    "폴리글리시톨시럽": ["폴리글리시톨시럽"],
+    "물엿": ["물엿"],
+    "자일리톨": ["자일리톨"]
+    }
+
+    warnings_count = 0
+    for group in warning_groups.values():
+        if any(kw in raw_materials for kw in group):
+            warnings_count += 1
 
     blood_sugar_warning = any(keyword in raw_materials for keyword in blacklist)
     missing_gi = not product.GI or str(product.GI).strip().lower() in ['null', '측정불가']
@@ -125,7 +141,7 @@ def product_detail(request, id):
         'product': product,
         'materials_list': materials_list,
         'highlighted_materials': highlighted_materials,
-        'warnings_count': sum(1 for k in blacklist if k in raw_materials),
+        'warnings_count': warnings_count,
         'has_maltitol': has_maltitol,
         'is_zero_calorie': is_zero_calorie,
         'warning_messages': warning_messages, # 👈 템플릿에서 사용할 리스트

@@ -11,10 +11,19 @@
 - 목표: **AI 활용 서비스 기획 및 설계**
   
 ### 시각적 자료
+- 홈
 <img src = "images/홈.JPG" alt="홈">
+
+- 커뮤니티
 <img src = "images/커뮤니티.JPG" alt="커뮤니티">
+
+- 검색 o
 <img src = "images/검색o.JPG" alt="검색o">
+
+- 검색 x
 <img src = "images/검색x.JPG" alt="검색x">
+
+- 세부정보 
 <img src = "images/세부정보.JPG" alt="세부정보">
 
 ## 2. 프로젝트 일정 (예시 Gantt 차트)
