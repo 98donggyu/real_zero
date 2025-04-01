@@ -39,7 +39,7 @@
       <div class="input-group rounded-pill shadow-sm">
         <input type="text" name="q" class="form-control border-0" placeholder="궁금한 제품을 검색해 보세요">
         <div class="input-group-append">
-          <button type="submit" class="btn btn-danger rounded-pill px-4">검색</button>
+          <button type="submit" class="btn btn-danger rounded-pill px-4" style="margin-left: 10px;">검색</button>
         </div>
       </div>
     </form>
@@ -47,19 +47,29 @@
 
     <!-- ✅ 탭 메뉴 -->
     {% block tabmenu %}
-<ul class="nav nav-tabs justify-content-around bg-white">
-  <li class="nav-item"><a class="nav-link active" href="{% url 'index' %}">홈</a></li>
-  <li class="nav-item"><a class="nav-link" href="{% url 'ranking' %}">랭킹</a></li>
-  <li class="nav-item"><a class="nav-link" href="{% url 'community' %}">커뮤니티</a></li>
-</ul>
-{% endblock %}
+    <ul class="nav nav-tabs justify-content-around bg-white">
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">홈</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == '/ranking/' %}active{% endif %}" href="{% url 'ranking' %}">랭킹</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == '/community/' %}active{% endif %}" href="{% url 'community' %}">커뮤니티</a>
+      </li>
+    </ul>
+    {% endblock %}
 
 
     <!-- ✅ 본문 영역 -->
     <div class="p-3">
       {% block content %}{% endblock %}
     </div>
-    
+    {% block footer %}
+      <footer class="text-center text-muted small py-4">
+        ⓒReal Zero<br>로그인
+      </footer>
+    {% endblock %}
   </div>
 </body>
 </html>

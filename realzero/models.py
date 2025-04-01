@@ -17,13 +17,14 @@ class realzero(models.Model):
     Caffeine = models.CharField(max_length=50, default=0,verbose_name="카페인 (g)")
     sugar = models.CharField(max_length=50, default=0, verbose_name="당류 (g)")
     Sugar_alcohol =  models.CharField(max_length=50, default=0, verbose_name="당알콜 (g)")
-    maltitol = models.CharField(max_length=50, default=0, verbose_name="말티톨 (g)")
-    maltitol_syrup = models.CharField(max_length=50, default=0, verbose_name="말티톨 시럽 (g)")
-    glucose_syrup = models.CharField(max_length=50, default=0, verbose_name="물엿 (g)")
     GI = models.CharField(max_length=50, default=0, verbose_name="GI지수")
     GL = models.CharField(max_length=50, default=0, verbose_name="GL지수")
     Raw_materials = models.TextField(default="Unknown", max_length=255, verbose_name="원재료명")
     emoji = models.CharField(max_length=20, default="😊")
+    image = models.URLField(max_length=500, blank=True, null=True, verbose_name="이미지")
+    price = models.CharField(max_length=50, default=0, verbose_name="가격 (원)") 
+
+
     def __str__(self):
         return self.product_name
 
